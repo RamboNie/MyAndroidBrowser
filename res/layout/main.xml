@@ -1,70 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#eee"
     >
-<RelativeLayout
-	android:layout_width="fill_parent"
-	android:layout_height="50px"
-	android:layout_alignParentTop="true"
-	android:orientation="vertical"
-	android:layout_x="4px"
-	android:layout_y="8px">
-	<RelativeLayout
+    
+	<LinearLayout
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content">
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+		<ImageButton
+      android:id="@+id/back_btn"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:src="@drawable/back">
+    </ImageButton>
+    <ImageButton
+      android:id="@+id/forward_btn"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:src="@drawable/forward">
+    </ImageButton>
+    
 		<EditText
 			android:id="@+id/edit_1"
-			android:layout_width="270px"
+			android:layout_width="0dp"
+			android:layout_weight="1"
 			android:layout_height="wrap_content"
 			android:textSize="15sp"
-			android:layout_alignParentLeft="true"
 			android:ellipsize="end"
 			android:lines="1"
+			android:hint="请输入网址"
 			android:singleLine="true">
 		</EditText>
+		
 		<ImageButton
 			android:id="@+id/button_1"
-		    android:layout_alignParentRight="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:src="@drawable/go">
 		</ImageButton>
-	</RelativeLayout>
-</RelativeLayout>
+	</LinearLayout>
+	<ScrollView 
+	    android:layout_width="fill_parent"
+	    android:layout_height="0dp"
+	    android:layout_weight = "1">
+	    	
+		<ViewFlipper android:id="@+id/vf"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content">	
+		 <WebView android:id="@+id/wv1"
+		            android:layout_height="fill_parent"
+		            android:layout_width="fill_parent"
+		            />
+		</ViewFlipper>
+	</ScrollView>
 
-<ViewFlipper android:id="@+id/vf"
-		android:layout_width="fill_parent" android:layout_height="305px">
-<WebView android:id="@+id/wv1"
-            android:layout_height="305px"
-            android:layout_width="fill_parent"
-            />
-</ViewFlipper>
-
-<RelativeLayout
-	android:layout_width="312px"
-	android:layout_height="54px"
-	android:orientation="vertical"
-	android:layout_x="4px"
-	android:layout_alignParentBottom="true"
-	android:layout_y="310px">
 	<LinearLayout
-		android:layout_width="307px"
-		android:layout_height="47px">
-		<ImageButton
-			android:id="@+id/back_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:src="@drawable/back">
-		</ImageButton>
-		<ImageButton
-			android:id="@+id/forward_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:src="@drawable/forward">
-		</ImageButton>
+		android:layout_width="307dp"
+		android:layout_height="47dp"
+		android:layout_marginLeft="4dp"
+		android:orientation="horizontal">
 		<ImageButton
 			android:id="@+id/menu_btn"
 			android:layout_width="wrap_content"
@@ -72,6 +69,5 @@
 			android:src="@drawable/menu">
 		</ImageButton>
 	</LinearLayout>
-</RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>

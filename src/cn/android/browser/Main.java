@@ -51,20 +51,20 @@ import android.widget.AdapterView.OnItemClickListener;
 public class Main extends Activity 
 {
 	private WebView mWebView = null;    
-    final Activity context = this;   
-    private SQLiteHelper mOpenHelper; 
-    public static Cursor myCursor_one;
-    Intent directCall;
-    private WriteFavoriteXml writeXml = new WriteFavoriteXml();
-    private ImageButton btn = null;
-    private EditText edit = null;
-    private ImageButton forwardBtn = null;
-    private ImageButton backBtn = null;
-    private ListView list = null;
-    private Button go_back = null;
-    private ImageButton menuBtn = null;
+	final Activity context = this;   
+	private SQLiteHelper mOpenHelper; 
+	public static Cursor myCursor_one;
+	Intent directCall;
+	private WriteFavoriteXml writeXml = new WriteFavoriteXml();
+	private ImageButton btn = null;
+	private EditText edit = null;
+	private ImageButton forwardBtn = null;
+	private ImageButton backBtn = null;
+	private ListView list = null;
+	private Button go_back = null;
+	private ImageButton menuBtn = null;
     
-    private final static int HISTORY_ITEM = 0;	//历史记录
+  private final static int HISTORY_ITEM = 0;	//历史记录
 	private final static int HTTP_ITEM = 1;	//关于
 	private final static int SHORTCUT_ITEM = 2;	//快捷方式
 	private final static int ADD_FAVORITE = 3;	//加入收藏夹
@@ -87,113 +87,96 @@ public class Main extends Activity
 	public static Main instance;
 
 	 @Override
-	    public void onCreate(Bundle savedInstanceState) {
-	        super.onCreate(savedInstanceState);
-	        Log.w("debug.onCreate","onCreate");
-	        requestWindowFeature(Window.FEATURE_PROGRESS);//让进度条显示在标题栏上 
+	public void onCreate(Bundle savedInstanceState){
+		super.onCreate(savedInstanceState);
+    Log.w("debug.onCreate","onCreate");
+    requestWindowFeature(Window.FEATURE_PROGRESS);//让进度条显示在标题栏上 
+    
+    mOpenHelper = new SQLiteHelper(this);
+    directCall = new Intent(Intent.ACTION_MAIN);//快捷方式
+    onInit();	
+    instance = this;	        
 	        
-	        mOpenHelper = new SQLiteHelper(this);
-	        directCall = new Intent(Intent.ACTION_MAIN);//快捷方式
-	        onInit();	
-	        instance = this;	        
-	        
-		    if (savedInstanceState == null) 		        
-		    {
-		    	deleteTable();
-	        } 
-	        else 
-	        {
-	            Bundle map = savedInstanceState.getBundle(SAVE_KEY);
-	            if (map != null) 
-	            {
-	                restoreState(map);
-	            }
-	        }
-	 }
+    if (savedInstanceState == null){
+    	deleteTable();
+    	}else{
+    		Bundle map = savedInstanceState.getBundle(SAVE_KEY);
+        if (map != null){
+        	restoreState(map);
+        }
+      }
+    }
 	
     private void onInit() {
-        setContentView(R.layout.main);
-        	
-        	edit = (EditText)findViewById(R.id.edit_1);
-
-        	mWebView = (WebView) findViewById(R.id.wv1); 
-
-        	btn = (ImageButton)findViewById(R.id.button_1);
-
-        	forwardBtn = (ImageButton)findViewById(R.id.forward_btn);
-
-        	backBtn = (ImageButton)findViewById(R.id.back_btn);
-
-        	menuBtn = (ImageButton)findViewById(R.id.menu_btn);
-
-        btn.setOnClickListener( new Button.OnClickListener()
-        {
-            public void onClick( View v )
-            {
-                // TODO Auto-generated method stub
-            	String str = edit.getText().toString();
-            	if(str != "")
-            	{
-            		cur_url = str;
-            		setTitle();
-            		mWebView.loadUrl(str); 
-            	}
-            }
-        } );
-        
-        forwardBtn.setOnClickListener( new Button.OnClickListener()
-        {
-            public void onClick( View v )
-            {
-                // TODO Auto-generated method stub
-            	if(mWebView.canGoForward())
-            		mWebView.goForward();
-            }
-        } );
-        backBtn.setOnClickListener( new Button.OnClickListener()
-        {
-            public void onClick( View v )
-            {
-                // TODO Auto-generated method stub
-            	if(mWebView.canGoBack())
-            		mWebView.goBack();
-            }
-        } );
-        menuBtn.setOnClickListener( new Button.OnClickListener()
-        {
-            public void onClick( View v )
-            {
-            	context.openOptionsMenu();
-            }
-        } );
-        
-        mWebView.setWebViewClient(new WebViewClient(){     
-        	public boolean shouldOverrideUrlLoading(WebView  view, String url) {     
-        		mWebView.loadUrl(url);  
-        		cur_url = url;
+    	setContentView(R.layout.main);
+      edit = (EditText)findViewById(R.id.edit_1);
+      mWebView = (WebView) findViewById(R.id.wv1);
+      btn = (ImageButton)findViewById(R.id.button_1);
+      forwardBtn = (ImageButton)findViewById(R.id.forward_btn);
+      backBtn = (ImageButton)findViewById(R.id.back_btn);
+      menuBtn = (ImageButton)findViewById(R.id.menu_btn);
+      
+      btn.setOnClickListener(new Button.OnClickListener(){
+        public void onClick(View v){
+            // TODO Auto-generated method stub
+        	String str = edit.getText().toString();
+        	if(str != "")
+        	{
+        		cur_url = str;
         		setTitle();
-        		//insertTable(url,1,mWebView.getTitle());
-        		return true;     
-        	}     
-        	}); 
+        		mWebView.loadUrl(str); 
+        	}
+        }
+      });
         
-        mWebView.setWebChromeClient(new WebChromeClient() {   
-            public void onProgressChanged(WebView view, int progress) {   
-              //Activity和Webview根据加载程度决定进度条的进度大小   
-             //当加载到100%的时候 进度条自动消失   
-              context.setProgress(progress * 100); 
-              if(progress>=100)
-              {
-            	  insertTable(cur_url,1,view.getTitle());
-              }
-              //Log.d("TTTTTTTTT",progress+","+view.getTitle());
-            }           
-        	});   
+	    forwardBtn.setOnClickListener(new Button.OnClickListener(){
+        public void onClick( View v ){
+          // TODO Auto-generated method stub
+        	if(mWebView.canGoForward()){
+        		mWebView.goForward();
+        	}
+        }
+	    });
+	    
+      backBtn.setOnClickListener( new Button.OnClickListener(){
+        public void onClick(View v){
+            // TODO Auto-generated method stub
+        	if(mWebView.canGoBack())
+        		mWebView.goBack();
+        }
+      });
+      
+      menuBtn.setOnClickListener(new Button.OnClickListener(){
+        public void onClick( View v ){
+        	context.openOptionsMenu();
+        }
+      });
         
-        	mWebView.loadUrl(cur_url);        
-        	setTitle();
-
-        Log.i("debug.Init",cur_url);
+      mWebView.setWebViewClient(new WebViewClient(){     
+	    	public boolean shouldOverrideUrlLoading(WebView  view, String url) {     
+	    		mWebView.loadUrl(url);  
+	    		cur_url = url;
+	    		setTitle();
+	    		//insertTable(url,1,mWebView.getTitle());
+	    		return true;     
+	    	}     
+      }); 
+        
+      mWebView.setWebChromeClient(new WebChromeClient(){   
+        public void onProgressChanged(WebView view, int progress) {   
+          //Activity和Webview根据加载程度决定进度条的进度大小   
+         //当加载到100%的时候 进度条自动消失   
+          context.setProgress(progress * 100); 
+          if(progress>=100){
+        	  insertTable(cur_url,1,view.getTitle());
+          }
+          //Log.d("TTTTTTTTT",progress+","+view.getTitle());
+        }           
+      });   
+        
+    	mWebView.loadUrl(cur_url);        
+    	setTitle();
+      Log.i("debug.Init",cur_url);
     }
     
     @Override
@@ -207,12 +190,11 @@ public class Main extends Activity
     private void setTitle()
     {
     	Bitmap bitmap = mWebView.getFavicon();
-        drawable = new BitmapDrawable(bitmap);     
-        //edit.setCompoundDrawables(drawable, null, null, null);
-        drawable = this.getResources().getDrawable(R.drawable.history);
-        edit.setCompoundDrawablesWithIntrinsicBounds(drawable, null,null,null);  
-        edit.setText(cur_url);
-        //edit.setMaxLines(1);
+      drawable = new BitmapDrawable(bitmap);     
+      drawable = this.getResources().getDrawable(R.drawable.history);
+      edit.setCompoundDrawablesWithIntrinsicBounds(drawable, null,null,null);  
+      edit.setText(cur_url);
+      //edit.setMaxLines(1);
     }
  
     @Override
@@ -261,53 +243,43 @@ public class Main extends Activity
     	
     	setContentView(R.layout.history);
     	list = (ListView)findViewById(R.id.list);
-        go_back = (Button)findViewById(R.id.go_back);
+      go_back = (Button)findViewById(R.id.go_back);
         
-        SimpleAdapter adapter = new SimpleAdapter(this, getData(),
+      SimpleAdapter adapter = new SimpleAdapter(this, getData(),
                 android.R.layout.simple_list_item_2, new String[] {"网页","网址"},
                 new int[] { android.R.id.text1 , android.R.id.text2});
-
-//    	final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-//                		android.R.layout.simple_list_item_1, history_data);
         
     	list.setAdapter(adapter);
-    	go_back.setOnClickListener( new Button.OnClickListener()
-        {
-            public void onClick( View v )
-            {
-                // TODO Auto-generated method stub
-            	onInit();
-            }
-        } );
-    	list.setOnItemClickListener(new OnItemClickListener() 
-    	{
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) 
-            {
-                cur_url = history_data.get(position).get("网址").toString();
-                onInit();
-            }
-        });
-    }
-    public void copyHistoryData(WebBackForwardList mylist)
-    {
-    	int i;  	
-        for (i=0;i<mylist.getSize();i++)
-        {
-        	Map<String, Object> item = new HashMap<String, Object>();
-        	item.put("网页", mylist.getItemAtIndex(i).getTitle());
-            item.put("网址", mylist.getItemAtIndex(i).getUrl());
-            history_data.add(item);
-
-            //history_data.add(mylist.getItemAtIndex(i).getUrl().toString()); //查看浏览器历史
+    	go_back.setOnClickListener(new Button.OnClickListener(){
+    		public void onClick(View v){
+	        // TODO Auto-generated method stub
+    			onInit();
+	      }
+       });
+    	
+    	list.setOnItemClickListener(new OnItemClickListener(){
+    		public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+            cur_url = history_data.get(position).get("网址").toString();
+            onInit();
         }
+      });
     }
-    private List<Map<String, Object>> getData()
-    { 
+    
+    public void copyHistoryData(WebBackForwardList mylist){
+    	int i;  	
+	    for (i=0;i<mylist.getSize();i++){
+	    	Map<String, Object> item = new HashMap<String, Object>();
+	    	item.put("网页", mylist.getItemAtIndex(i).getTitle());
+	      item.put("网址", mylist.getItemAtIndex(i).getUrl());
+	      history_data.add(item);
+	    }
+    }
+    
+    private List<Map<String, Object>> getData(){ 
     	return history_data; 
     } 
     
-    protected Dialog onCreateDialog(int id) //只在第一次创建时调用
-	{	
+    protected Dialog onCreateDialog(int id){	
 		if(id == FAVORITE_ITEM)
 		{
     		return new AlertDialog.Builder(Main.this)
@@ -439,12 +411,13 @@ public class Main extends Activity
 		{
 			do {
 				Map<String, Object> item = new HashMap<String, Object>();
-	        	item.put("网页", myCursor_one.getString(name));
-	            item.put("网址", myCursor_one.getString(url));
-	            history_data.add(item);
+	      item.put("网页", myCursor_one.getString(name));
+	      item.put("网址", myCursor_one.getString(url));
+	      history_data.add(item);
 				//history_data.add(myCursor_one.getString(url));
 			} while (myCursor_one.moveToNext());
 		}
+		
 		myCursor_one.close();  	
 	}
 	
@@ -520,77 +493,85 @@ public class Main extends Activity
 		webSettings.setJavaScriptEnabled(flag);  
 	}
 	
-	@Override protected void onResume() {
-        super.onResume();
-        Log.w("debug.onResume","onResume");
-    }
-    @Override protected void onSaveInstanceState(Bundle outState) {
-    	outState.putBundle(SAVE_KEY, saveState());
-    	Log.w("debug.onSaveInstanceState","onSaveInstanceState");
-    }
-    @Override protected void onPause() {
-        super.onPause();
-        Log.w("debug.onPause","onPause");
-    }	
-    @Override protected void onStart() {
-        super.onStart();
-        Log.w("debug.onStart","onStart");
-    }
-    @Override protected void onRestart() {
-        super.onRestart();
-        Log.w("debug.onRestart","onRestart");
-    }
-    @Override protected void onStop() {
-        super.onStop();
-        Log.w("debug.onStop","onStop");
-    }
-    @Override protected void onDestroy() {
-    	showDialog(EXIT_ITEM);
-        //super.onDestroy();
-        Log.w("debug.onDestroy","onDestroy");
-    } 
-    
-    public void restoreState(Bundle icicle) 
-    {
-    	cur_url = icicle.getString("URL");
-    	mWebView.loadUrl(cur_url);
-    	setTitle();
-    }
-    
-    public Bundle saveState()
-    {
-    	Bundle map = new Bundle();
-    	map.putString("URL", cur_url);
-        return map;
-    }
-    
-    @Override  
-    public void onBackPressed() 
-    {  
-        dialog();  
-    } 
-    protected void dialog() 
-    {  
-        AlertDialog.Builder builder = new Builder(Main.this);  
-        builder.setIcon(R.drawable.icon);
-        builder.setTitle(R.string.exit_title);
-        builder.setMessage(R.string.exit_message);
-        builder.setPositiveButton(R.string.ok_btn,  
-        new android.content.DialogInterface.OnClickListener() {  
-            @Override  
-            public void onClick(DialogInterface dialog, int which) {  
-                dialog.dismiss();  
-                android.os.Process.killProcess(android.os.Process.myPid());  
-            }  
-        });  
-        builder.setNegativeButton(R.string.no_btn,  
-        new android.content.DialogInterface.OnClickListener() {  
-            @Override  
-            public void onClick(DialogInterface dialog, int which) {  
-                dialog.dismiss();  
-            }  
-        });  
-        builder.create().show();  
-    }  
+	@Override 
+	protected void onResume() {
+    super.onResume();
+    Log.w("debug.onResume","onResume");
+  }
 	
+  @Override 
+  protected void onSaveInstanceState(Bundle outState) {
+		outState.putBundle(SAVE_KEY, saveState());
+		Log.w("debug.onSaveInstanceState","onSaveInstanceState");
+  }
+  
+  @Override 
+  protected void onPause() {
+    super.onPause();
+    Log.w("debug.onPause","onPause");
+  }	
+  
+  @Override 
+  protected void onStart() {
+    super.onStart();
+    Log.w("debug.onStart","onStart");
+  }
+  
+  @Override 
+  protected void onRestart() {
+    super.onRestart();
+    Log.w("debug.onRestart","onRestart");
+  }
+  
+  @Override 
+  protected void onStop() {
+    super.onStop();
+    Log.w("debug.onStop","onStop");
+  }
+  
+	@Override 
+	protected void onDestroy() {
+		showDialog(EXIT_ITEM);
+	    //super.onDestroy();
+	  Log.w("debug.onDestroy","onDestroy");
+	} 
+    
+	public void restoreState(Bundle icicle){
+		cur_url = icicle.getString("URL");
+		mWebView.loadUrl(cur_url);
+		setTitle();
+	}
+    
+  public Bundle saveState(){
+		Bundle map = new Bundle();
+		map.putString("URL", cur_url);
+	  return map;
+  }
+    
+  @Override  
+  public void onBackPressed(){  
+  	dialog();  
+  }
+  
+	protected void dialog(){  
+    AlertDialog.Builder builder = new Builder(Main.this);  
+    builder.setIcon(R.drawable.icon);
+    builder.setTitle(R.string.exit_title);
+    builder.setMessage(R.string.exit_message);
+    builder.setPositiveButton(R.string.ok_btn, new android.content.DialogInterface.OnClickListener(){
+	    @Override  
+	    public void onClick(DialogInterface dialog, int which){  
+	    	dialog.dismiss();  
+	      android.os.Process.killProcess(android.os.Process.myPid());  
+	    }  
+    });  
+    builder.setNegativeButton(R.string.no_btn,  
+    new android.content.DialogInterface.OnClickListener() {  
+        @Override  
+        public void onClick(DialogInterface dialog, int which){  
+        	dialog.dismiss();
+        }  
+    });  
+    builder.create().show();  
+	}
 }

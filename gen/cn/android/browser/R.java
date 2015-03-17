@@ -36,10 +36,10 @@ public final class R {
     }
     public static final class id {
         public static final int TextView_HTTP=0x7f080007;
-        public static final int back_btn=0x7f08000c;
-        public static final int button_1=0x7f080009;
-        public static final int edit_1=0x7f080008;
-        public static final int forward_btn=0x7f08000d;
+        public static final int back_btn=0x7f080008;
+        public static final int button_1=0x7f08000b;
+        public static final int edit_1=0x7f08000a;
+        public static final int forward_btn=0x7f080009;
         public static final int gallery=0x7f080000;
         public static final int go_back=0x7f080006;
         public static final int img=0x7f08000f;
@@ -47,12 +47,12 @@ public final class R {
         public static final int list=0x7f080005;
         public static final int menu_btn=0x7f08000e;
         public static final int title=0x7f080010;
-        public static final int vf=0x7f08000a;
+        public static final int vf=0x7f08000c;
         public static final int vf_help=0x7f080001;
         public static final int view1=0x7f080002;
         public static final int view2=0x7f080003;
         public static final int view3=0x7f080004;
-        public static final int wv1=0x7f08000b;
+        public static final int wv1=0x7f08000d;
     }
     public static final class layout {
         public static final int gall=0x7f030000;
