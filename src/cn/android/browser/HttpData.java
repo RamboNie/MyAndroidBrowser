@@ -46,7 +46,7 @@ public class HttpData extends Activity
 {   
     private TextView tv = null;   
     private Bitmap mBitmap = null;   
-    private Gallery g = null;
+    private Gallery image_gallery = null;
     
     private String httpStr = "";
     private List<String> http_list = null;  
@@ -61,23 +61,19 @@ public class HttpData extends Activity
     private final int MENU_ITEM_EXIT = 1;
     
     @Override   
-    public void onCreate(Bundle savedInstanceState) {   
+    public void onCreate(Bundle savedInstanceState){  
         super.onCreate(savedInstanceState);   
-;   
         Intent intent = this.getIntent();   
         Bundle b = intent.getExtras();   
         int id = b.getInt("id");
-        String url = b.getString("url");
-        
-        if(id==1)
-        {
+        String url = b.getString("url");    
+        if(id==1){
         	open_view_1(url);
         }
         else
         {
         	open_view_2(url);
-        }
-         
+        }  
     }  
     
     private void open_view_1(String u)
@@ -85,29 +81,27 @@ public class HttpData extends Activity
     	setContentView(R.layout.http);   
     	tv = (TextView) this.findViewById(R.id.TextView_HTTP); 
     	startLoading();
-    	
-    	 select_1(u);
+    	select_1(u);
     }
     private void open_view_2(String u)
     {
     	setContentView(R.layout.gall);   
-    	g = (Gallery) findViewById(R.id.gallery);
+    	image_gallery = (Gallery) findViewById(R.id.gallery);
     	startLoading();
     	  	
     	select_1(u);
      	http_list = getImgStr(httpStr);
-     	if(http_list!=null)
+     	if(http_list!=null){
      		select_2();
+     	}
          
-         g.setAdapter(new ImageAdapter(this));
+     	image_gallery.setAdapter(new ImageAdapter(this));   
+     	image_gallery.setOnItemClickListener(new OnItemClickListener(){
+      	public void onItemClick(AdapterView parent, View v, int position, long id){         
+      }
+    });
          
-         g.setOnItemClickListener(new OnItemClickListener() {
-         	 public void onItemClick(AdapterView parent, View v, int position, long id) {
-                  
-              }
-         });
-         
-         registerForContextMenu(g);
+      registerForContextMenu(image_gallery);
     }
     
     private void select_1(String u)
@@ -120,9 +114,9 @@ public class HttpData extends Activity
             e.printStackTrace();   
         }   
         if (url != null) {   
-            try {   
-                HttpURLConnection urlConn = (HttpURLConnection) url   
-                        .openConnection();// 打开连接，此处只是创建一个实力，并没有真正的连接   
+            try {
+                //打开连接，此处只是创建一个实力，并没有真正的连接   
+                HttpURLConnection urlConn = (HttpURLConnection)url.openConnection();
                 urlConn.connect();// 连接   
                 InputStream input = urlConn.getInputStream();   
                 InputStreamReader inputReader = new InputStreamReader(input);   
